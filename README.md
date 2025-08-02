@@ -72,12 +72,14 @@ A comprehensive fullstack simulation of an assignment management system built wi
 ---
 
 ## 📂 Project Structure (Simplified)
-/app
-/(auth) → Login/Register pages
-/dashboard → Protected pages for both roles
-/components → UI components (Sidebar, Charts, Forms, etc.)
-/lib → Utility functions & role logic
-/context → Auth & Data context (local state management)
+
+- **/app**: Main application root.
+- **/auth**: Contains login and registration pages.
+- **/dashboard**: Protected routes accessible by authenticated users of any role.
+- **/components**: Reusable UI components like Sidebar, Charts, and Forms.
+- **/lib**: Utility functions and role-related logic helpers.
+- **/context**: Context providers for authentication and data management.
+
 
 
 ---
@@ -87,8 +89,8 @@ A comprehensive fullstack simulation of an assignment management system built wi
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/assignment-portal.git
-cd assignment-portal
+git clone https://github.com/farhanshahriyar/AssignmentPortal.git
+cd AssignmentPortal
 ```
 
 ### 2. Install dependencies

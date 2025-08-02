@@ -5,10 +5,13 @@ import { Badge } from "@/components/ui/badge"
 import { ExternalLink, Calendar, FileText } from "lucide-react"
 import { useAssignments } from "@/lib/assignment-context"
 import { useAuth } from "@/lib/auth-context"
+import { useSession } from "next-auth/react"
 
 export function StudentSubmissions() {
   const { submissions, assignments } = useAssignments()
-  const { user } = useAuth()
+  const { data: session } = useSession()
+  const user = session?.user || {}
+  
 
   const studentSubmissions = submissions.filter((s) => s.studentEmail === user?.email)
 

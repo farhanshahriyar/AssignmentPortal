@@ -43,11 +43,15 @@ import {
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/lib/auth-context"
 import { useAssignments } from "@/lib/assignment-context"
+import { useSession } from "next-auth/react"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user, signOut } = useAuth()
+  const { signOut } = useAuth()
+  const { data: session, status } = useSession()
+ const user = session?.user || {}
   const { assignments, submissions } = useAssignments()
   const router = useRouter()
+
 
   if (!user) return null
 
@@ -237,8 +241,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage src="/placeholder.svg" alt={user.name} />
                     <AvatarFallback className="rounded-lg">
-                      {user.name
-                        .split(" ")
+                      {user?.name
+                        ?.split?.(" ")
                         .map((n) => n[0])
                         .join("")
                         .toUpperCase()}
@@ -260,10 +264,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src="/placeholder.svg" alt={user.name} />
+                      <AvatarImage src="/placeholder-user.jpg" alt={user.name} />
                       <AvatarFallback className="rounded-lg">
-                        {user.name
-                          .split(" ")
+                        {user?.name
+                          ?.split(" ")
                           .map((n) => n[0])
                           .join("")
                           .toUpperCase()}
@@ -276,14 +280,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <User />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings />
-                  Settings
-                </DropdownMenuItem>
+                
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut />

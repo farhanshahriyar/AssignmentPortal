@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useAssignments } from "@/lib/assignment-context"
 import { useAuth } from "@/lib/auth-context"
 
+import { useSession } from "next-auth/react"
 interface SubmissionFormProps {
   assignmentId: string
   onClose: () => void
@@ -20,7 +21,8 @@ export function SubmissionForm({ assignmentId, onClose }: SubmissionFormProps) {
   const [note, setNote] = useState("")
   const [loading, setLoading] = useState(false)
   const { addSubmission } = useAssignments()
-  const { user } = useAuth()
+const { data: session } = useSession()
+  const user = session?.user || {}
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -8,6 +8,11 @@ import { Calendar, Clock, FileText } from "lucide-react"
 import { useAssignments } from "@/lib/assignment-context"
 import { useAuth } from "@/lib/auth-context"
 import { SubmissionForm } from "@/components/submission-form"
+import { useSession } from "next-auth/react"
+import dynamic from "next/dynamic"
+const AssingmentDeadline = dynamic(() => import("./dynamic/AssingmentDeadline"), {
+  ssr: false,
+})
 
 interface AssignmentListProps {
   showActions: boolean
@@ -15,7 +20,9 @@ interface AssignmentListProps {
 
 export function AssignmentList({ showActions }: AssignmentListProps) {
   const { assignments, submissions } = useAssignments()
-  const { user } = useAuth()
+  const {data:session} =useSession()
+  const user = session?.user || {}
+  console.log(session, "user")
   const [selectedAssignment, setSelectedAssignment] = useState<string | null>(null)
 
   const getSubmissionStatus = (assignmentId: string) => {
@@ -52,7 +59,9 @@ export function AssignmentList({ showActions }: AssignmentListProps) {
       {assignments.map((assignment) => {
         const submissionStatus = getSubmissionStatus(assignment.id)
         const submitted = hasSubmitted(assignment.id)
-        const overdue = isOverdue(assignment.deadline)
+        const overdue =isOverdue(new Date(assignment.deadline))
+        console.log(assignment.deadline)
+        console.log(overdue, "overdue")
 
         return (
           <Card key={assignment.id}>
@@ -84,15 +93,15 @@ export function AssignmentList({ showActions }: AssignmentListProps) {
               <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
-                  <span>Due: {assignment.deadline.toLocaleDateString()}</span>
+                  <AssingmentDeadline deadline={assignment.deadline} date={true} />
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="h-4 w-4" />
-                  <span>{assignment.deadline.toLocaleTimeString()}</span>
+                 <AssingmentDeadline deadline={assignment.deadline} date={false}/>
                 </div>
               </div>
 
-              {!showActions && user?.role === "student" && (
+              {!showActions && user?.role === "STUDENT" && (
                 <div className="flex gap-2">
                   {!submitted ? (
                     <Button onClick={() => setSelectedAssignment(assignment.id)} disabled={overdue}>
