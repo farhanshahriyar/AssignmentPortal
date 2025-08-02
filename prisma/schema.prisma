@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// auto generated code from Prisma CLI
+// generator client {
+//   provider = "prisma-client-js"
+//   output   = "../lib/generated/prisma"
+// }
+
+// datasource db {
+//   provider = "sqlite"
+//   url      = env("DATABASE_URL")
+// }
+
+// manual code
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String   @id @default(cuid())
+  name     String?
+  email    String   @unique
+  password String
+  role     Role     @default(STUDENT)
+  assignmentsCreated Assignment[] @relation("InstructorAssignments")
+  submissions        Submission[]
+}
+
+model Assignment {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  deadline    DateTime
+  createdBy   User     @relation("InstructorAssignments", fields: [createdById], references: [id])
+  createdById String
+  submissions Submission[]
+  createdAt   DateTime @default(now())
+}
+
+model Submission {
+  id           String   @id @default(cuid())
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  assignmentId String
+  student      User     @relation(fields: [studentId], references: [id])
+  studentId    String
+  submissionUrl String
+  notes        String?
+  status       Status   @default(PENDING)
+  feedback     String?
+  submittedAt  DateTime @default(now())
+}
+
+enum Role {
+  INSTRUCTOR
+  STUDENT
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
